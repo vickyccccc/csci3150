@@ -1,3 +1,4 @@
+/*	Chan Yau Ki 1155157432	*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/wait.h>
@@ -134,16 +135,6 @@ int shell_execute(char **args, int argc)
 		}
 	}
 
-	if (pipeCount != 0)
-	{
-		for (int j = 0; j < pipeCount; j++)
-		{
-			close(fd[j][0]);
-			close(fd[j][1]);
-			// printf("close unused fd		p%d\n", i);
-		}
-	}
-
 	for (int i = 0; i <= pipeCount; i++)
 	{
 		if ((wait_return = wait(&child_pid[i])) < 0)
@@ -154,6 +145,15 @@ int shell_execute(char **args, int argc)
 		else
 		{
 			// printf("cmd%d done\n", i);
+			if (pipeCount != 0)
+			{
+				for (int j = 0; j < pipeCount; j++)
+				{
+					close(fd[j][0]);
+					close(fd[j][1]);
+					// printf("close unused fd		p%d\n", i);
+				}
+			}
 		}
 	}
 
