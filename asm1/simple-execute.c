@@ -1,4 +1,5 @@
-/*	Chan Yau Ki 1155157432	*/
+/*	Chan Yau Ki 1155157432		*/
+/*	Mak Wing Chit 1155157789	*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/wait.h>
