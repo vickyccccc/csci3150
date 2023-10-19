@@ -1,0 +1,11 @@
+ProcessNum 10
+pidnum:2, arrival_time:10, execution_time:10
+pidnum:1, arrival_time:10, execution_time:10
+pidnum:3, arrival_time:10, execution_time:10
+pidnum:4, arrival_time:1, execution_time:11
+pidnum:0, arrival_time:100, execution_time:10
+pidnum:5, arrival_time:70, execution_time:30
+pidnum:6, arrival_time:30, execution_time:46
+pidnum:7, arrival_time:120, execution_time:15
+pidnum:8, arrival_time:130, execution_time:19
+pidnum:9, arrival_time:163, execution_time:20
