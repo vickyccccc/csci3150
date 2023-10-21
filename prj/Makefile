@@ -1,5 +1,8 @@
-test:
-	gcc -o test ../lab03/superblock.c ../lab04/inode.c call.c open_test.c -Wall
+open_test:
+	gcc -o open_test call.c open_test.c -Wall
+
+read_test:
+	gcc -o read_test call.c read_test.c -Wall
 
 clean:
-	rm test
+	rm open_test read_test

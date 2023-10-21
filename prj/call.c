@@ -37,14 +37,30 @@ int open_t(char *pathname)
 		int fd;
 		if ((fd = open(HD, O_RDWR)) < 0)
 		{
-			printf("Error: open()\n");
+			// printf("Error: open()\n");
 			return -1;
 		}
 
-		inode *ip = read_inode(fd, j == 0 ? 0 : inode_number);
+		// inode *ip = read_inode(fd, j == 0 ? 0 : inode_number);
+		inode *ip = malloc(sizeof(inode));
+		int currpos0 = lseek(fd, I_OFFSET + (j == 0 ? 0 : inode_number) * sizeof(inode), SEEK_SET);
+		if (currpos0 < 0)
+		{
+			// printf("Error: lseek()\n");
+			return -1;
+		}
+
+		// read inode from disk
+		int ret = read(fd, ip, sizeof(inode));
+		if (ret != sizeof(inode))
+		{
+			// printf("Error: read()\n");
+			return -1;
+		}
+
 		if (ip == NULL)
 		{
-			printf("Error: read_inode()\n");
+			// printf("Error: read_inode()\n");
 			return -1;
 		}
 
