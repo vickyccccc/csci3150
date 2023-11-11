@@ -17,7 +17,7 @@ void scheduler(Process *proc, LinkedQueue **ProcessQueue, int proc_num, int queu
             proc[i].waiting_time = 0;
         }
         int startTime = proc[0].arrival_time, endTime = 0;
-        printf("(init) startTime: %d\n", startTime);
+        // printf("(init) startTime: %d\n", startTime);
 
         // TODO: enqueue process to highest priority
         for (int i = 0; i < proc_num; i++)
@@ -38,15 +38,11 @@ void scheduler(Process *proc, LinkedQueue **ProcessQueue, int proc_num, int queu
         while (1)
         {
             // printf("%d\n", ++time);
-            // if (time > 28)
-            // {
-            //     break;
-            // }
 
             // TODO: Check all process done --> end
             if (allProcDone == proc_num)
             {
-                printf("end\n");
+                // printf("end\n");
                 break;
             }
 
@@ -60,7 +56,7 @@ void scheduler(Process *proc, LinkedQueue **ProcessQueue, int proc_num, int queu
 
                     // TODO: set endTime as time_slice
                     endTime = startTime + ProcessQueue[i]->time_slice;
-                    printf("[%d] endTime by time_slice: %d\n", currentProc.process_id, endTime);
+                    // printf("[%d] endTime by time_slice: %d\n", currentProc.process_id, endTime);
 
                     // TODO: check if Period_S, update endTime (Situation 4)
                     int isSpansPeriod = 0;
@@ -71,7 +67,7 @@ void scheduler(Process *proc, LinkedQueue **ProcessQueue, int proc_num, int queu
                         {
                             isSpansPeriod = 1;
                             endTime = periodPoint;
-                            printf("[%d] endTime by periodPoint: %d\n", currentProc.process_id, endTime);
+                            // printf("[%d] endTime by periodPoint: %d\n", currentProc.process_id, endTime);
                             break;
                         }
                         else if (periodPoint > endTime)
@@ -83,16 +79,16 @@ void scheduler(Process *proc, LinkedQueue **ProcessQueue, int proc_num, int queu
                     int timeSlot = endTime - startTime;
                     timeSlot = timeSlot < remaining_time ? timeSlot : remaining_time;
                     endTime = startTime + timeSlot;
-                    printf("[%d] remaining_time: %d\n", currentProc.process_id, remaining_time);
-                    printf("[%d] timeSlot: %d\n", currentProc.process_id, timeSlot);
+                    // printf("[%d] remaining_time: %d\n", currentProc.process_id, remaining_time);
+                    // printf("[%d] timeSlot: %d\n", currentProc.process_id, timeSlot);
                     currentProc.service_time += timeSlot;
                     currentProc.waiting_time++;
                     int NoEnQueue = 1;
-                    printf("[%d] execution_time: %d\n", currentProc.process_id, currentProc.execution_time);
-                    printf("[%d] service_time: %d\n", currentProc.process_id, currentProc.service_time);
+                    // printf("[%d] execution_time: %d\n", currentProc.process_id, currentProc.execution_time);
+                    // printf("[%d] service_time: %d\n", currentProc.process_id, currentProc.service_time);
                     if (currentProc.execution_time == currentProc.service_time)
                     {
-                        printf("Process %d done at %d\n", currentProc.process_id, endTime);
+                        // printf("Process %d done at %d\n", currentProc.process_id, endTime);
                         currentProc.completion_time = endTime;
                         currentProc.turnaround_time = currentProc.completion_time - currentProc.arrival_time;
                         currentProc.waiting_time = currentProc.turnaround_time - currentProc.execution_time;
@@ -101,7 +97,7 @@ void scheduler(Process *proc, LinkedQueue **ProcessQueue, int proc_num, int queu
                     else
                         NoEnQueue = currentProc.waiting_time == N[i] ? -1 : 0;
 
-                    printf("[%d] NoEnQueue: %d\n", currentProc.process_id, NoEnQueue);
+                    // printf("[%d] NoEnQueue: %d\n", currentProc.process_id, NoEnQueue);
 
                     // TODO: enqueue new proc to highest priority & Situation 1, 2, 5
                     for (int j = 0; j < proc_num; j++)
@@ -109,21 +105,21 @@ void scheduler(Process *proc, LinkedQueue **ProcessQueue, int proc_num, int queu
                         if (proc[j].arrival_time > startTime && proc[j].arrival_time < endTime)
                         {
                             EnQueue(ProcessQueue[queue_num - 1], proc[j]);
-                            printf("[%d] is enqueued 1\n", proc[j].process_id);
+                            // printf("[%d] is enqueued 1\n", proc[j].process_id);
                         }
                     }
                     if (NoEnQueue != 1)
                     {
                         currentProc.waiting_time = NoEnQueue == -1 ? 0 : currentProc.waiting_time;
-                        EnQueue(ProcessQueue[i + NoEnQueue], currentProc);
-                        printf("[%d] is enqueued 2\n", currentProc.process_id);
+                        EnQueue(ProcessQueue[i + NoEnQueue < 0 ? 0 : i + NoEnQueue], currentProc);
+                        // printf("[%d] is enqueued 2\n", currentProc.process_id);
                     }
                     for (int j = 0; j < proc_num; j++)
                     {
                         if (proc[j].arrival_time == endTime)
                         {
                             EnQueue(ProcessQueue[queue_num - 1], proc[j]);
-                            printf("[%d] is enqueued 3\n", proc[j].process_id);
+                            // printf("[%d] is enqueued 3\n", proc[j].process_id);
                         }
                     }
 
@@ -131,13 +127,13 @@ void scheduler(Process *proc, LinkedQueue **ProcessQueue, int proc_num, int queu
                     if (isSpansPeriod)
                     {
                         LinkedQueue *temp = InitQueue(0);
-                        printf("Period! %d\n", endTime);
+                        // printf("Period! %d\n", endTime);
                         for (int k = queue_num - 1; k >= 0; k--)
                             while (!IsEmptyQueue(ProcessQueue[k]))
                             {
                                 EnQueue(temp, DeQueue(ProcessQueue[k]));
                             }
-                        QueuePrint(temp);
+                        // QueuePrint(temp);
 
                         int size = Length(temp);
                         int pids[size];
@@ -164,6 +160,7 @@ void scheduler(Process *proc, LinkedQueue **ProcessQueue, int proc_num, int queu
                                 Process target = DeQueue(temp);
                                 if (pids[x] == target.process_id)
                                 {
+                                    target.waiting_time = 0;
                                     EnQueue(ProcessQueue[queue_num - 1], target);
                                     break;
                                 }
@@ -171,7 +168,7 @@ void scheduler(Process *proc, LinkedQueue **ProcessQueue, int proc_num, int queu
                                     EnQueue(temp, target);
                             }
                         }
-                        QueuePrint(ProcessQueue[queue_num - 1]);
+                        // QueuePrint(ProcessQueue[queue_num - 1]);
                     }
 
                     // TODO: outprint
@@ -179,8 +176,8 @@ void scheduler(Process *proc, LinkedQueue **ProcessQueue, int proc_num, int queu
 
                     // TODO: set next startTime
                     startTime = endTime;
-                    printf("startTime: %d\n", startTime);
-                    printf("endTime: %d\n", endTime);
+                    // printf("startTime: %d\n", startTime);
+                    // printf("endTime: %d\n", endTime);
                     break;
                 }
             }
