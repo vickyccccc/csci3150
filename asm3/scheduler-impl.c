@@ -46,6 +46,8 @@ void scheduler(Process *proc, LinkedQueue **ProcessQueue, int proc_num, int queu
                 break;
             }
 
+            int waiting = 0;
+
             // TODO: Get the proc from highest priority
             for (int i = queue_num - 1; i >= 0; i--)
             {
@@ -179,6 +181,25 @@ void scheduler(Process *proc, LinkedQueue **ProcessQueue, int proc_num, int queu
                     // printf("startTime: %d\n", startTime);
                     // printf("endTime: %d\n", endTime);
                     break;
+                }
+                else
+                {
+                    waiting++;
+                }
+            }
+
+            // TODO: if proc not start but currently no proc in queue
+            if (waiting == queue_num)
+            {
+                // TODO: increase startTime && enqueue new proc to highest priority
+                startTime++;
+                for (int j = 0; j < proc_num; j++)
+                {
+                    if (proc[j].arrival_time == startTime)
+                    {
+                        EnQueue(ProcessQueue[queue_num - 1], proc[j]);
+                        // printf("[%d] is enqueued 1\n", proc[j].process_id);
+                    }
                 }
             }
         }
