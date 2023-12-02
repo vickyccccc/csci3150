@@ -8,44 +8,51 @@ static int exited;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 
-void thr_exit() {
+void thr_exit()
+{
   pthread_mutex_lock(&mutex);
 
-  /* YOUR CODE HERE */
+  exited++;
+  pthread_cond_signal(&cond);
 
   pthread_mutex_unlock(&mutex);
 }
 
-void thr_join() {
+void thr_join()
+{
   pthread_mutex_lock(&mutex);
 
-  while (exited < N_THREADS) /* YOUR CODE HERE */
+  while (exited < N_THREADS)
+    pthread_cond_wait(&cond, &mutex);
 
   pthread_mutex_unlock(&mutex);
 }
 
-void *child_func(void *arg) {
-  int thr_id = /* YOUR CODE HERE */;
+void *child_func(void *arg)
+{
+  int thr_id = *(int *)arg;
   printf("child %d created and exited\n", thr_id);
   thr_exit();
   return NULL;
 }
 
-int main() {
+int main()
+{
   pthread_t p[N_THREADS];
   int thr_idx[N_THREADS];
   void *arg;
   int i;
 
-  exited = /* YOUR CODE HERE */;
+  exited = 0;
 
   puts("parent: begin");
 
-  for (i = 0; i < N_THREADS; i++) {
+  for (i = 0; i < N_THREADS; i++)
+  {
     thr_idx[i] = i;
     arg = &thr_idx[i];
 
-    pthread_create(/* YOUR CODE HERE */);
+    pthread_create(&p[i], NULL, child_func, &thr_idx[i]);
   }
 
   thr_join();
