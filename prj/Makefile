@@ -1,3 +1,7 @@
+all:
+	gcc -o open_test call.c open_test.c -Wall
+	gcc -o read_test call.c read_test.c -Wall
+
 open_test:
 	gcc -o open_test call.c open_test.c -Wall
 
